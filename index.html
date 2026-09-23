@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="assets/Icon-Tab.jpg" type="image/x-icon">
+
+    <!-- ! <=====( METADATOS DE PREVISUALIZACIÓN Y SEO )=====> -->
+    <title>Maru</title>
+    <meta name="description" content="Tu cajera de confianza | 24 horas">
+
+    <!-- Open Graph / WhatsApp / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://queen-coins.github.io/Maru/">
+    <meta property="og:title" content="Maru">
+    <meta property="og:description" content="Tu cajera de confianza | 24 horas">
+    <meta property="og:image" content="https://queen-coins.github.io/Maru/assets/Icon-Preview.jpg">
+    <meta property="og:image:secure_url" content="https://queen-coins.github.io/Maru/assets/Icon-Preview.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Maru">
+    <meta name="twitter:description" content="Tu cajera de confianza | 24 horas">
+    <meta name="twitter:image" content="https://queen-coins.github.io/Maru/assets/Icon-Preview.jpg">
+
+    <!-- ! <=====( TIPOGRAFÍAS DE GOOGLE FONTS )=====> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anta&family=Great+Vibes&family=Marhey:wght@400;600;700&family=Prompt:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- ! <=====( ESTILOS CSS E ICONOS )=====> -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- ! <=====( CONTENEDOR TARJETA PRINCIPAL )=====> -->
+    <main class="container">
+        
+        <!-- ! <=====( ENCABEZADO Y MARCA )=====> -->
+        <header class="profile-header">
+            <div class="title-container">
+                <div class="title-text-group">
+                    <h1 class="title">Maru</h1>
+                    <p class="subtitle">Tu cajera de confianza</p>
+                </div>
+                <img src="assets/Icon.jpg" alt="Logo de Maru" class="profile-logo">
+            </div>
+        </header>
+
+        <!-- ! <=====( FRASE MOTIVADORA )=====> -->
+        <section class="card-section quote-card">
+            <p class="quote-text">¡La suerte 🍀 es loca! <br> Y puede que está vez te toca! 😎... <br> Con la mejor atención  cajera Maru ❤️☺️</p>
+        </section>
+
+        <!-- ! <=====( CANALES DE ATENCIÓN / WHATSAPP )=====> -->
+        <section class="card-section info-card">
+            <h2 class="section-title"><i class="fa-solid fa-headset" aria-hidden="true"></i>En Línea 24hs</h2>
+            <p class="card-subtitle">Hacé click en un canal para comunicarte:</p>
+
+            <div class="links-section">
+                <a href="https://wa.me/542984346818" target="_blank" rel="noopener" class="btn btn-whatsapp">
+                    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> WhatsApp
+                </a>
+                <a href="https://www.instagram.com/caje.maru?utm_source=qr&stkn=djdkcHMxdWNuYjM0" target="_blank" rel="noopener" class="btn btn-instagram">
+                    <i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram
+                </a>
+            </div>
+        </section>
+
+        <!-- ! <=====( ACCESO A LA PLATAFORMA )=====> -->
+        <section class="card-section platform-card">
+            <h2 class="section-title"><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Plataforma</h2>
+            <p class="card-subtitle">Ingresá para jugar directamente:</p>
+            
+            <a href="https://celuapuestas.fans/" target="_blank" rel="noopener" class="btn btn-platform">
+                <i class="fa-solid fa-arrow-right-to-bracket" aria-hidden="true"></i> Entrar a CeluApuestas
+            </a>
+        </section>
+
+        <!-- ! <=====( DIVISOR VISUAL DE SECCIÓN )=====> -->
+        <div class="section-divider">
+            <span><i class="fa-solid fa-clover" aria-hidden="true"></i></span>
+        </div>
+
+        <!-- ! <=====( RULETA INTERACTIVA )=====> -->
+        <section class="card-section roulette-section">
+            <h2 class="section-title"><i class="fa-solid fa-clover" aria-hidden="true"></i> Probá tu suerte</h2>
+            
+            <div class="roulette-container">
+                <div class="pointer" aria-hidden="true"></div>
+                <canvas id="rouletteCanvas" width="300" height="300"></canvas>
+            </div>
+            
+            <button id="spinBtn" class="btn btn-spin">
+                <i class="fa-solid fa-rotate" aria-hidden="true"></i> ¡GIRAR RULETA!
+            </button>
+        </section>
+        <section class="card-section disclaimer-section">
+            <p class="disclaimer-text">Juga con responsabilidad. <br> ¡Mayores de 18 años!</p>
+        </section>
+    </main>
+
+    <!-- ! <=====( MODAL EMERGENTE DE RESULTADOS )=====> -->
+    <div id="resultModal" class="modal-overlay" role="dialog" aria-modal="true">
+        <div class="modal-content">
+            <h3 class="modal-title">¡Este es tu próximo destino!</h3>
+            <img id="modalGameImg" src="" alt="Juego seleccionado" class="modal-game-img">
+            <p id="modalGameText" class="modal-game-text">Juego seleccionado</p>
+            <button id="closeModalBtn" class="btn btn-close-modal">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- ! <=====( LÓGICA Y SCRIPTS )=====> -->
+    <script src="script.js"></script>
+</body>
+</html>
