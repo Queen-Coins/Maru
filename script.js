@@ -26,6 +26,7 @@ const games = [
 const canvas = document.getElementById('rouletteCanvas');
 const ctx = canvas.getContext('2d');
 const spinBtn = document.getElementById('spinBtn');
+const rouletteWheelWrapper = document.querySelector('.roulette-wheel-wrapper');
 
 const modal = document.getElementById('resultModal');
 const modalGameText = document.getElementById('modalGameText');
@@ -36,9 +37,8 @@ const numSegments = games.length;
 const arcSize = (2 * Math.PI) / numSegments;
 let currentAngle = 0;
 let isSpinning = false;
-let idleAnimationId = null;
 
-// ! <=====( CARGA DE IMÁGENES Y CONTROL DE IDLE )=====>
+// ! <=====( CARGA DE IMÁGENES )=====>
 const loadedImages = [];
 let imagesLoadedCount = 0;
 
@@ -53,18 +53,11 @@ games.forEach((game, index) => {
 function handleImageLoad() {
     imagesLoadedCount++;
     if (imagesLoadedCount === numSegments) {
-        startIdleSpin();
+        drawRoulette();
     }
 }
 
-function startIdleSpin() {
-    if (isSpinning) return;
-    currentAngle += 0.003;
-    drawRoulette();
-    idleAnimationId = requestAnimationFrame(startIdleSpin);
-}
-
-// ! <=====( RENDERIZADO DEL CANVAS CON IMAGEN DE FONDO EN CADA GAJO )=====>
+// ! <=====( RENDERIZADO DEL CANVAS )=====>
 function drawRoulette() {
     const radius = canvas.width / 2;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -76,34 +69,28 @@ function drawRoulette() {
 
         ctx.save();
         
-        // 1. Trazar la trayectoria del sector (gajo triangular)
         ctx.beginPath();
         ctx.moveTo(radius, radius);
         ctx.arc(radius, radius, radius, angle, angle + arcSize);
         ctx.lineTo(radius, radius);
         ctx.closePath();
 
-        // 2. Si la imagen está disponible, usarla como fondo abarcando todo el bloque
         if (img && img.complete && img.naturalWidth !== 0) {
             ctx.save();
-            ctx.clip(); // Aplicar máscara con la forma del gajo
+            ctx.clip();
 
-            // Posicionar la imagen para que cubra completamente el gajo desde el centro
             ctx.translate(radius, radius);
             ctx.rotate(angle + arcSize / 2);
             
-            // Dibujamos la imagen ocupando el radio completo
             const imgSize = radius * 1.2;
             ctx.drawImage(img, 0, -imgSize / 2, radius, imgSize);
             
             ctx.restore();
         } else {
-            // Fondo plano de reserva en caso de fallo de carga de imagen
             ctx.fillStyle = isBordaux ? '#991323' : '#f7d070';
             ctx.fill();
         }
 
-        // 3. Dibujar las líneas divisorias de cada sector para separarlos
         ctx.strokeStyle = '#ff66c4';
         ctx.lineWidth = 1.5;
         ctx.stroke();
@@ -112,15 +99,33 @@ function drawRoulette() {
     }
 }
 
+// Función auxiliar para obtener el ángulo actual de la animación CSS sin saltos
+function getCurrentRotation(element) {
+    const st = window.getComputedStyle(element);
+    const tr = st.getPropertyValue("transform") || st.getPropertyValue("-webkit-transform");
+    if (tr && tr !== "none") {
+        const values = tr.split('(')[1].split(')')[0].split(',');
+        const a = parseFloat(values[0]);
+        const b = parseFloat(values[1]);
+        let angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+        if (angle < 0) angle += 360;
+        return angle * (Math.PI / 180);
+    }
+    return 0;
+}
+
 // ! <=====( FÍSICA Y ANIMACIÓN DEL GIRO )=====>
 function spin() {
     if (isSpinning) return;
     
-    if (idleAnimationId) {
-        cancelAnimationFrame(idleAnimationId);
-        idleAnimationId = null;
-    }
-    
+    // Sincronizamos el ángulo exacto en el que iba el giro CSS para evitar saltos
+    currentAngle = getCurrentRotation(rouletteWheelWrapper);
+
+    // Quitamos la clase de reposo y reseteamos el transform en línea
+    rouletteWheelWrapper.classList.remove('idle-spinning');
+    rouletteWheelWrapper.style.transform = 'none';
+    drawRoulette();
+
     isSpinning = true;
 
     const startAngle = currentAngle;
@@ -195,5 +200,11 @@ spinBtn.addEventListener('click', spin);
 
 closeModalBtn.addEventListener('click', () => {
     modal.classList.remove('active');
-    startIdleSpin();
+    rouletteWheelWrapper.style.transform = 'none';
+    rouletteWheelWrapper.classList.add('idle-spinning');
+});
+
+// Activar animación de reposo automática al cargar la página
+window.addEventListener('load', () => {
+    rouletteWheelWrapper.classList.add('idle-spinning');
 });
